@@ -1,0 +1,1 @@
+"""Responsavel por utilitarios compartilhados."""

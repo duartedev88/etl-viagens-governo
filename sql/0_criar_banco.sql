@@ -1,0 +1,1 @@
+-- Arquivo reservado para criacao das tabelas Raw e Silver.
