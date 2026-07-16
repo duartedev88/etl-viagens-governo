@@ -1,8 +1,17 @@
 -- =========================================================
--- CRIACAO DO BANCO
--- Execute este comando conectado a outro banco, como "postgres".
+-- ETAPA 1: CRIACAO DO BANCO
+-- Execute somente o comando CREATE DATABASE conectado
+-- a outro banco, como "postgres".
+-- Execute esta etapa apenas se o banco ainda nao existir.
 -- =========================================================
 CREATE DATABASE etl_viagens_governo;
+
+
+-- =========================================================
+-- ETAPA 2: CRIACAO DAS TABELAS
+-- Depois de criar o banco, conecte-se manualmente ao banco
+-- antes de executar os comandos abaixo.
+-- =========================================================
 
 
 -- =========================================================
@@ -113,7 +122,7 @@ CREATE TABLE raw_trecho (
 -- =========================================================
 
 CREATE TABLE silver_viagem (
-    id_viagem VARCHAR(20),
+    id_viagem VARCHAR(20) NOT NULL,
     num_proposta VARCHAR(20),
     situacao VARCHAR(50),
     viagem_urgente VARCHAR(5),
