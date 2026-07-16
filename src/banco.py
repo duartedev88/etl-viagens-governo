@@ -1,7 +1,5 @@
 """Conexao e teste simples com PostgreSQL."""
 
-from typing import Any
-
 import psycopg2
 from psycopg2.extensions import connection as Connection
 from psycopg2.extensions import cursor as Cursor
@@ -48,8 +46,10 @@ def testar_conexao() -> str:
             )
 
         return str(resultado[0])
-    except (psycopg2.Error, ConnectionError) as exc:
-        raise ConnectionError("Falha ao executar o teste de conexao no PostgreSQL.") from exc
+    except psycopg2.Error as exc:
+        raise ConnectionError(
+            "Falha ao executar o teste de conexao no PostgreSQL."
+        ) from exc
     finally:
         if cursor is not None:
             cursor.close()
@@ -59,6 +59,9 @@ def testar_conexao() -> str:
 
 
 if __name__ == "__main__":
-    versao = testar_conexao()
-    print("Conexao com PostgreSQL realizada com sucesso.")
-    print(versao)
+    try:
+        versao = testar_conexao()
+        print("Conexao com PostgreSQL realizada com sucesso.")
+        print(versao)
+    except ConnectionError as erro:
+        print(f"Erro: {erro}")
