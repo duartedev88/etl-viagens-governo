@@ -1,23 +1,25 @@
 -- =========================================================
--- CRIACAO DO BANCO
--- Execute este comando conectado a outro banco, como "postgres".
+-- CRIAÇÃO MANUAL DO BANCO
+-- Execute apenas uma vez, conectado ao banco postgres.
+-- Não é executado automaticamente pelo 1_extrair.py.
 -- =========================================================
-CREATE DATABASE etl_viagens_governo;
+
+-- CREATE DATABASE etl_viagens_governo;
 
 
 -- =========================================================
--- REMOCAO DAS TABELAS EXISTENTES
--- Ordem inversa das dependencias da camada Silver.
+-- REINICIALIZAÇÃO MANUAL
+-- Atenção: estes comandos removem as tabelas e seus dados.
 -- =========================================================
-DROP TABLE IF EXISTS silver_trecho;
-DROP TABLE IF EXISTS silver_passagem;
-DROP TABLE IF EXISTS silver_pagamento;
-DROP TABLE IF EXISTS silver_viagem;
 
-DROP TABLE IF EXISTS raw_trecho;
-DROP TABLE IF EXISTS raw_passagem;
-DROP TABLE IF EXISTS raw_pagamento;
-DROP TABLE IF EXISTS raw_viagem;
+-- DROP TABLE IF EXISTS silver_trecho;
+-- DROP TABLE IF EXISTS silver_passagem;
+-- DROP TABLE IF EXISTS silver_pagamento;
+-- DROP TABLE IF EXISTS silver_viagem;
+-- DROP TABLE IF EXISTS raw_trecho;
+-- DROP TABLE IF EXISTS raw_passagem;
+-- DROP TABLE IF EXISTS raw_pagamento;
+-- DROP TABLE IF EXISTS raw_viagem;
 
 
 -- =========================================================
@@ -28,7 +30,9 @@ DROP TABLE IF EXISTS raw_viagem;
 -- Nenhuma tabela Raw possui constraints.
 -- =========================================================
 
-CREATE TABLE raw_viagem (
+-- INICIO_CRIACAO_AUTOMATICA
+
+CREATE TABLE IF NOT EXISTS raw_viagem (
     "Identificador do processo de viagem" VARCHAR,
     "Número da Proposta (PCDP)" VARCHAR,
     "Situação" VARCHAR,
@@ -53,7 +57,7 @@ CREATE TABLE raw_viagem (
     "Valor outros gastos" VARCHAR
 );
 
-CREATE TABLE raw_pagamento (
+CREATE TABLE IF NOT EXISTS raw_pagamento (
     "Identificador do processo de viagem" VARCHAR,
     "Número da Proposta (PCDP)" VARCHAR,
     "Código do órgão superior" VARCHAR,
@@ -66,7 +70,7 @@ CREATE TABLE raw_pagamento (
     "Valor" VARCHAR
 );
 
-CREATE TABLE raw_passagem (
+CREATE TABLE IF NOT EXISTS raw_passagem (
     "Identificador do processo de viagem" VARCHAR,
     "Número da Proposta (PCDP)" VARCHAR,
     "Meio de transporte" VARCHAR,
@@ -88,7 +92,7 @@ CREATE TABLE raw_passagem (
     "Hora da emissão/compra" VARCHAR
 );
 
-CREATE TABLE raw_trecho (
+CREATE TABLE IF NOT EXISTS raw_trecho (
     "Identificador do processo de viagem " VARCHAR,
     "Número da Proposta (PCDP)" VARCHAR,
     "Sequência Trecho" VARCHAR,
@@ -112,7 +116,7 @@ CREATE TABLE raw_trecho (
 -- Por isso, os NOT NULL exigidos foram declarados diretamente nas colunas.
 -- =========================================================
 
-CREATE TABLE silver_viagem (
+CREATE TABLE IF NOT EXISTS silver_viagem (
     id_viagem VARCHAR(20),
     num_proposta VARCHAR(20),
     situacao VARCHAR(50),
@@ -135,7 +139,7 @@ CREATE TABLE silver_viagem (
     CONSTRAINT ck_silver_viagem_valor_diarias CHECK (valor_diarias >= 0)
 );
 
-CREATE TABLE silver_pagamento (
+CREATE TABLE IF NOT EXISTS silver_pagamento (
     id_pagamento INTEGER GENERATED ALWAYS AS IDENTITY,
     id_viagem VARCHAR(20) NOT NULL,
     num_proposta VARCHAR(20),
@@ -149,7 +153,7 @@ CREATE TABLE silver_pagamento (
     CONSTRAINT ck_silver_pagamento_valor CHECK (valor >= 0)
 );
 
-CREATE TABLE silver_passagem (
+CREATE TABLE IF NOT EXISTS silver_passagem (
     id_passagem INTEGER GENERATED ALWAYS AS IDENTITY,
     id_viagem VARCHAR(20) NOT NULL,
     meio_transporte VARCHAR(50),
@@ -169,7 +173,7 @@ CREATE TABLE silver_passagem (
     CONSTRAINT ck_silver_passagem_taxa_servico CHECK (taxa_servico >= 0)
 );
 
-CREATE TABLE silver_trecho (
+CREATE TABLE IF NOT EXISTS silver_trecho (
     id_trecho INTEGER GENERATED ALWAYS AS IDENTITY,
     id_viagem VARCHAR(20) NOT NULL,
     sequencia_trecho INTEGER,
@@ -187,3 +191,5 @@ CREATE TABLE silver_trecho (
     CONSTRAINT ck_silver_trecho_numero_diarias CHECK (numero_diarias >= 0),
     CONSTRAINT uq_silver_trecho_viagem_sequencia UNIQUE (id_viagem, sequencia_trecho)
 );
+
+-- FIM_CRIACAO_AUTOMATICA
