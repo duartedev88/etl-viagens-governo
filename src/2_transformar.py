@@ -246,7 +246,7 @@ def carregar_silver_viagem(cursor: Cursor) -> int:
             )::DECIMAL(12,2) AS valor_total,
             CASE
                 WHEN data_inicio IS NULL OR data_fim IS NULL THEN NULL
-                ELSE data_fim - data_inicio
+                ELSE (data_fim - data_inicio) + 1
             END AS duracao_dias
         FROM dados_convertidos
         WHERE id_viagem IS NOT NULL
